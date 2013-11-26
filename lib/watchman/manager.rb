@@ -8,6 +8,7 @@ module Watchman
   # The middleware injects an authorization guard object into
   # the rack environment hash
   class Manager
+    extend Watchman::Hooks
     attr_accessor :config
 
     # Initialize the middleware. If a block is given, a Watchman::Config is yielded so you can properly
