@@ -1,4 +1,3 @@
-watchman
-========
+h2. watchman
 
 Rack based authorization middleware.
