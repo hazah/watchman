@@ -7,6 +7,4 @@ require 'watchman/manager'
 
 module Watchman
   class NotAuthorized < StandardError; end
-
-
 end

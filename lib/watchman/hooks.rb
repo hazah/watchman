@@ -55,7 +55,7 @@ module Watchman
       if options.key?(:only)
         options[:event] = options.delete(:only)
       elsif options.key?(:except)
-        options[:event] = [:set_permissions, :authorization, :fetch] - Array(options.delete(:except))
+        options[:event] = [:set_permissions, :fetch] - Array(options.delete(:except))
       end
 
       _after_set_permissions.send(method, [block, options])
@@ -65,15 +65,6 @@ module Watchman
     # :api: private
     def _after_set_permissions # :nodoc:
       @_after_set_permissions ||= []
-    end
-
-    # after_authorization is just a wrapper to after_set_permissions, which is only invoked
-    # when the permissions are set through the authorization path. The options and yielded arguments
-    # are the same as in after_set_user.
-    #
-    # :api: public
-    def after_authorization(options = {}, method = :push, &block)
-      after_set_permissions(options.merge(:event => :authorization), method, &block)
     end
 
     # after_fetch is just a wrapper to after_set_permissions, which is only invoked
@@ -171,8 +162,7 @@ module Watchman
     end
 
     # Add prepend filters version
-    %w(after_set_permissions after_authorization after_fetch on_request
-       before_failure).each do |filter|
+    %w(after_set_permissions after_fetch on_request before_failure).each do |filter|
       class_eval <<-METHOD, __FILE__, __LINE__ + 1
         def prepend_#{filter}(options={}, &block)
           #{filter}(options, :unshift, &block)
