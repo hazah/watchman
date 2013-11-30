@@ -34,7 +34,7 @@ module Watchman
      # Lazily initiate errors object in session.
     # :api: public
     def errors
-      #@env[ENV_WARDEN_ERRORS] ||= Errors.new
+      @env[ENV_WARDEN_ERRORS] ||= Errors.new
     end
 
     # Points to a SessionSerializer instance responsible for handling
@@ -42,7 +42,7 @@ module Watchman
     # session.
     # :api: public
     def session_serializer
-      #@session_serializer ||= Warden::SessionSerializer.new(@env)
+      @session_serializer ||= Warden::SessionSerializer.new(@env)
     end
 
     # Clear the cache of performed strategies so far. Warden runs each
