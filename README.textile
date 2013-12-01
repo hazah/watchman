@@ -81,4 +81,8 @@ bc.. Warden::Manager.after_set_user do |user, auth, opts|
   env['watchman'].authorize! :warden, opts # use only the :warden strategy
 end
 
-env['watchman'].permitted? :read, Post
+env['watchman'].permit! :read, Post
+
+p. This setup means that whenever a user is authenticated using warden, they will automatically
+be authorized (their permissions will be known). Using the @permit!@ method you can then test
+and fail authorization for specific sets of arguments.
