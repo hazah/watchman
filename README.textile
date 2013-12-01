@@ -66,13 +66,39 @@ bc.. Watchman::Strategies.add(:warden) do
     env.has_key?('warden')
   end
 
+  def user
+    env['warden'].user(scope)
+  end
+
   def authorize!
-    u = env['warden'].user(scope)
+    u = user
     u.nil? fail!("Could not authorize") : success!(u.permissions)
   end
 end
 
 h3. Setup Permissions
+
+p. We can process the current user scope and determine if the user has permission for a requested action.
+
+p. We can define how to process collections of objects that the user has certain permissions for. By
+supplying a collection block, we give Watchman a chance to preprocess an object collection and return
+a collection authorized for the requested permission.
+
+p. Supplying a resource block will enable us to check authorization of individual objects and collections for requested permissions.
+
+bc.. Watchman::Permissions.add(:read, :posts, scope: :anonymous) do
+  scope do |user|
+    !user.blocked?
+  end
+
+  collection do |posts|
+    posts.where(published: true)
+  end
+
+  resource do |post|
+    post.published?
+  end
+end
 
 h3. Use it in your application
 
@@ -81,7 +107,8 @@ bc.. Warden::Manager.after_set_user do |user, auth, opts|
   env['watchman'].authorize! :warden, opts # use only the :warden strategy
 end
 
-env['watchman'].permit! :read, Post
+posts = env['watchman'].permitted(:read, Post.all) # Checks that the user.blocked? returns false and then only retrieves posts where published is set to true
+env['watchman'].permit! :read, posts # Checks that user.blocked? return false and then all posts to ensure each returns true for published?
 
 p. This setup means that whenever a user is authenticated using warden, they will automatically
 be authorized (their permissions will be known). Using the @permit!@ method you can then test
