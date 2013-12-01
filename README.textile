@@ -66,12 +66,8 @@ bc.. Watchman::Strategies.add(:warden) do
     env.has_key?('warden')
   end
 
-  def user
-    env['warden'].user(scope)
-  end
-
   def authorize!
-    u = user
+    u = env['warden'].user(scope)
     u.nil? fail!("Could not authorize") : success!(u.permissions)
   end
 end
