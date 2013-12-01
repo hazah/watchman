@@ -76,7 +76,9 @@ h3. Setup Permissions
 
 h3. Use it in your application
 
-bc.. env['watchman'].authorize! # use all defaults
-env['watchman'].authorize! :warden # use only the :warden strategy
+bc.. Warden::Manager.after_set_user do |user, auth, opts|
+  env['watchman'].authorize! opts # use all default strategy
+  env['watchman'].authorize! :warden, opts # use only the :warden strategy
+end
 
 env['watchman'].permitted? :read, Post
