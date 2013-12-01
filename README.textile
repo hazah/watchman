@@ -72,7 +72,11 @@ bc.. Watchman::Strategies.add(:warden) do
   end
 end
 
+h3. Setup Permissions
+
 h3. Use it in your application
 
 bc.. env['watchman'].authorize! # use all defaults
 env['watchman'].authorize! :warden # use only the :warden strategy
+
+env['watchman'].permitted? :read, Post
