@@ -4,6 +4,10 @@ require 'forwardable'
 require 'watchman/mixins/common'
 require 'watchman/proxy'
 require 'watchman/manager'
+require 'watchman/errors'
+require 'watchman/session_serializer'
+require 'watchman/strategies'
+require 'watchman/strategies/base'
 
 module Watchman
   class NotAuthorized < StandardError; end

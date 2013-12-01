@@ -38,7 +38,7 @@ module Watchman
     end
 
     # Points to a SessionSerializer instance responsible for handling
-    # everything related with storing, fetching and removing the user
+    # everything related with storing, fetching and removing the permissions
     # session.
     # :api: public
     def session_serializer
@@ -55,7 +55,7 @@ module Watchman
     #
     # Parameters:
     # args - a list of symbols (labels) that name the strategies to attempt
-    # opts - an options hash that contains the :scope of the user to check
+    # opts - an options hash that contains the :scope of the permissions to check
     #
     # Example:
     # # Clear all strategies for the configured default_scope
@@ -211,7 +211,7 @@ module Watchman
       else
         unless permissions = session_serializer.fetch(scope)
           run_callbacks = opts.fetch(:run_callbacks, true)
-          manager._run_callbacks(:after_failed_fetch, user, self, :scope => scope) if run_callbacks
+          manager._run_callbacks(:after_failed_fetch, permissions, self, :scope => scope) if run_callbacks
         end
 
         @permissions[scope] = permissions ? set_permissions(permissions, opts.merge(:event => :fetch)) : nil
@@ -272,9 +272,9 @@ module Watchman
       return permissions, opts if permissions = permissions(opts.merge(:scope => scope))
       _run_strategies_for(scope, args)
 
-      if winning_strategy && winning_strategy.user
+      if winning_strategy && winning_strategy.permissions
         opts[:store] = opts.fetch(:store, winning_strategy.store?)
-        set_permissions(winning_strategy.user, opts.merge!(:event => :authentication))
+        set_permissions(winning_strategy.permissions, opts.merge!(:event => :authorization))
       end
 
       [@permissions[scope], opts]

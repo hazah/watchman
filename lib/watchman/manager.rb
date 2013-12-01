@@ -29,7 +29,7 @@ module Watchman
     def call(env) # :nodoc:
       return @app.call(env) if env['watchman'] && env['watchman'].manager != self
 
-      #env['watchman'] = Proxy.new(env, self)
+      env['watchman'] = Proxy.new(env, self)
       result = catch(:watchman) do
         @app.call(env)
       end
@@ -62,14 +62,14 @@ module Watchman
       # You can supply different methods of serialization for different scopes by passing a scope symbol
       #
       # Example:
-      # Watchman::Manager.serialize_into_session{ |permissions| permissions.to_a.map { |p| p.id } }
+      #   Watchman::Manager.serialize_into_session{ |permissions| permissions.to_a.map { |p| p.id } }
       # # With Scope:
-      # Watchman::Manager.serialize_into_session(:admin) { |permissions| permissions.to_a.map { |p| p.id } }
+      #   Watchman::Manager.serialize_into_session(:admin) { |permissions| permissions.to_a.map { |p| p.id } }
       #
       # :api: public
       def serialize_into_session(scope = nil, &block)
         method_name = scope.nil? ? :serialize : "#{scope}_serialize"
-        #Watchman::SessionSerializer.send :define_method, method_name, &block
+        Watchman::SessionSerializer.send :define_method, method_name, &block
       end
 
       # Reconstitues the user from the session.
@@ -85,11 +85,11 @@ module Watchman
       def serialize_from_session(scope = nil, &block)
         method_name = scope.nil? ? :deserialize : "#{scope}_deserialize"
 
-#        if Watchman::SessionSerializer.method_defined? method_name
-#          Watchman::SessionSerializer.send :remove_method, method_name
-#        end
+        if Watchman::SessionSerializer.method_defined? method_name
+          Watchman::SessionSerializer.send :remove_method, method_name
+        end
 
-#        Watchman::SessionSerializer.send :define_method, method_name, &block
+        Watchman::SessionSerializer.send :define_method, method_name, &block
       end
     end
 

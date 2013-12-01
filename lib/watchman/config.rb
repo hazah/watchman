@@ -87,7 +87,7 @@ module Watchman
     # Quick accessor to strategies from manager
     # :api: public
     def strategies
-      #Watchman::Strategies
+      Watchman::Strategies
     end
 
     # Hook from configuration to serialize_into_session.
