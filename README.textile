@@ -83,10 +83,14 @@ a collection authorized for the requested permission.
 p. Supplying a resource block will enable us to check authorization of individual objects and collections for requested permissions.
 
 bc.. Watchman::Permissions.add(:read, :posts, scope: :anonymous) do
+  # This block is called for collections that are not arrays, such as ActiveRecord::Relation objects.
+  # Otherwise, the select method is called on the array passing it the resource
+  # block
   collection do |posts|
     posts.where(published: true)
   end
 
+  # Called to verify the permission and filtering collections of resources
   resource do |post|
     post.published?
   end
