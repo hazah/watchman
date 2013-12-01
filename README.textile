@@ -82,33 +82,42 @@ a collection authorized for the requested permission.
 
 p. Supplying a resource block will enable us to check authorization of individual objects and collections for requested permissions.
 
-bc.. Watchman::Permissions.add(:read_posts, scope: :anonymous) do
-  # This block is called for collections that are not arrays, such as ActiveRecord::Relation objects.
+bc.. Watchman::Permissions(:read_published_posts)
+
+Watchman::Permissions.add(:read, Post) do
+  # This block is called for collections that are not arrays, such as @ActiveRecord::Relation@ objects.
   # Otherwise, the select method is called on the array passing it the resource
   # block
   collection do |posts|
+    return false unless permitted?(:read_published_posts)
+
     posts.where(published: true)
   end
 
-  # Called to verify the permission and filtering collections of resources
+  # Called to verify the permission and filtering array-like collections of resources
   resource do |post|
+    return false unless permitted?(:read_published_posts)
+
     post.published?
   end
 end
 
 h3. Use it in your application
 
+p. Authorization logic succeeds authentication. When, for example, using Warden for authentication
+it's trivial to initialize the authorization environment by using Warden's @after_set_user@ hook. Passing
+Warden's supplied options without modification is usually sufficient as many relevant option names are the same.
+
 bc.. Warden::Manager.after_set_user do |user, auth, opts|
   env['watchman'].authorize! opts # use all default strategy
   env['watchman'].authorize! :warden, opts # use only the :warden strategy
 end
 
-posts = env['watchman'].permitted(:read_posts, Post.all) # Only retrieves posts where published is set to true
-env['watchman'].permit! :read_posts # Throws :watchman if this permission does not currently active.
-env['watchman'].permit! :read_posts, posts # Checks all posts to ensure each returns true for published?, throws :watchman if fails.
+posts = env['watchman'].permitted(:read, Post.all) # Only retrieves posts where published is set to true
+env['watchman'].permit! :read, posts # Checks all posts to ensure each returns true for published?, throws :watchman if fails.
 
-env['watchman'].permitted? :read_posts # Returns true if this permission is currently active.
-env['watchman'].permitted? :read_posts, posts # Checks all posts to and returns true if each returns true for published?
+env['watchman'].permitted? :read, Post # Returns true if this permission is currently active.
+env['watchman'].permitted? :read, posts # Checks all posts and returns true if each returns true for published?
 
 p. This setup means that whenever a user is authenticated using warden, they will automatically
 be authorized (their permissions will be known). Using the @permitted@ method you can retrieve
