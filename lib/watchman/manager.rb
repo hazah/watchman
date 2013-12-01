@@ -63,7 +63,7 @@ module Watchman
       #
       # Example:
       #   Watchman::Manager.serialize_into_session{ |permissions| permissions.to_a.map { |p| p.id } }
-      # # With Scope:
+      # With Scope:
       #   Watchman::Manager.serialize_into_session(:admin) { |permissions| permissions.to_a.map { |p| p.id } }
       #
       # :api: public

@@ -39,7 +39,7 @@ module Watchman
       self[:default_scope] ||= :default
       self[:scope_defaults] ||= {}
       self[:default_strategies] ||= {}
-      self[:intercept_403] = true unless key?(:intercept_401)
+      self[:intercept_403] = true unless key?(:intercept_403)
     end
 
     def initialize_copy(other)

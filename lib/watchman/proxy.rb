@@ -16,7 +16,7 @@ module Watchman
     include ::Watchman::Mixins::Common
 
     ENV_WATCHMAN_ERRORS = 'watchman.errors'.freeze
-    ENV_WATCHMAN_OPTIONS = 'rack.session.options'.freeze
+    ENV_SESSION_OPTIONS = 'rack.session.options'.freeze
 
     # :api: private
     def_delegators :winning_strategy, :headers, :status, :custom_response
@@ -93,11 +93,11 @@ module Watchman
     # When scope is not specified, the default_scope is assumed.
     #
     # Parameters:
-    # args - a list of symbols (labels) that name the strategies to attempt
-    # opts - an options hash that contains the :scope of the user to check
+    #   args - a list of symbols (labels) that name the strategies to attempt
+    #   opts - an options hash that contains the :scope of the permissions to check
     #
     # Example:
-    # env['watchman'].authorize(:content, :scope => :user)
+    #   env['watchman'].authorize(:warden, :scope => :anonymous)
     #
     # :api: public
     def authorize(*args)
@@ -120,7 +120,7 @@ module Watchman
     # and rendered through the +failure_app+
     #
     # Example
-    # env['watchman'].authorize!(:comment, :scope => :anonymous) # throws if it cannot authorize
+    # env['watchman'].authorize!(:warden, :scope => :anonymous) # throws if it cannot authorize
     #
     # :api: public
     def authorize!(*args)
@@ -172,7 +172,7 @@ module Watchman
       if opts[:store] != false && opts[:event] != :fetch
         options = env[ENV_SESSION_OPTIONS]
         options[:renew] = true if options
-        session_serializer.store(user, scope)
+        session_serializer.store(permissions, scope)
       end
 
       run_callbacks = opts.fetch(:run_callbacks, true)
@@ -267,8 +267,8 @@ module Watchman
       scope, opts = _retrieve_scope_and_opts(args)
       permissions = nil
 
-      # Look for an existing user in the session for this scope.
-      # If there was no user in the session. See if we can get one from the request.
+      # Look for existing permissions in the session for this scope.
+      # If there ware no permissions in the session. See if we can get one from the request.
       return permissions, opts if permissions = permissions(opts.merge(:scope => scope))
       _run_strategies_for(scope, args)
 

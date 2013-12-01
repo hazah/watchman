@@ -63,7 +63,7 @@ p. You can define many strategies and one will be selected and used.
 
 bc.. Watchman::Strategies.add(:warden) do
   def valid?
-    !!env['warden'].nil?
+    env.has_key?('warden')
   end
 
   def authorize!
@@ -71,3 +71,8 @@ bc.. Watchman::Strategies.add(:warden) do
     u.nil? fail!("Could not authorize") : success!(u.permissions)
   end
 end
+
+h3. Use it in your application
+
+bc.. env['watchman'].authorize! # use all defaults
+env['watchman'].authorize! :warden # use only the :warden strategy
