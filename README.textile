@@ -6,7 +6,7 @@ h2. Setup
 
 h3. Rack
 
-Watchman _must_ be downstream of some kind of authentication middleware. It _must_ have
+p. Watchman _must_ be downstream of some kind of authentication middleware. It _must_ have
 a failure application declared, and you should declare which strategy to use by
 default.
 
@@ -30,12 +30,9 @@ bc.. Rack::Builder.new do
 end
 
 
-h3. Authentication
-
-
 h3. Session
 
-One of the results of using any kind of permission objects is that you need to
+p. One of the results of using any kind of permission objects is that you need to
 tell Watchman how to serialize the permissions in and out of the session. You'll
 need to set this up
 
@@ -48,3 +45,29 @@ Watchman::Manager.serialize_from_session do |ids|
 end
 
 p. This can of course be as complex as needed.
+
+
+h3. Declare Some Strategies
+
+p. You'll need to declare some strategies to be able to get Watchman to actually authorize.
+Watchman uses the concept of strategies to determine if a request should be authorized.
+Watchman will try strategies one after another until either,
+* One succeeds
+* No strategies found relevant
+* A strategy fails
+
+p. Conceptually a strategy is where you put the logic for determining the permissions
+for a request. Practically, it's a decendant of @Watchman::Strategies::Base@.
+
+p. You can define many strategies and one will be selected and used.
+
+bc.. Watchman::Strategies.add(:warden) do
+  def valid?
+    !!env['warden'].nil?
+  end
+
+  def authorize!
+    u = env['warden'].user(scope)
+    u.nil? fail!("Could not authorize") : success!(u.permissions)
+  end
+end
