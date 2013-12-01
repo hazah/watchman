@@ -87,10 +87,6 @@ a collection authorized for the requested permission.
 p. Supplying a resource block will enable us to check authorization of individual objects and collections for requested permissions.
 
 bc.. Watchman::Permissions.add(:read, :posts, scope: :anonymous) do
-  scope do |user|
-    !user.blocked?
-  end
-
   collection do |posts|
     posts.where(published: true)
   end
@@ -107,9 +103,11 @@ bc.. Warden::Manager.after_set_user do |user, auth, opts|
   env['watchman'].authorize! :warden, opts # use only the :warden strategy
 end
 
-posts = env['watchman'].permitted(:read, Post.all) # Checks that the user.blocked? returns false and then only retrieves posts where published is set to true
-env['watchman'].permit! :read, posts # Checks that user.blocked? return false and then all posts to ensure each returns true for published?
+posts = env['watchman'].permitted(:read, Post.all) # Only retrieves posts where published is set to true
+env['watchman'].permit! :read, posts # Checks all posts to ensure each returns true for published?
 
 p. This setup means that whenever a user is authenticated using warden, they will automatically
-be authorized (their permissions will be known). Using the @permit!@ method you can then test
+be authorized (their permissions will be known). Using the @permitted@ method you can retrieve
+a collection of objects for which the user has the permission. Using the @permit!@ method you
+can then test individual objects or entire collections whether the action is authorized or not.
 and fail authorization for specific sets of arguments.
