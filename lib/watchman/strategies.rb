@@ -7,8 +7,8 @@ module Watchman
         strategy ||= Class.new(Watchman::Strategies::Base)
         strategy.class_eval(&block) if block_given?
 
-        unless strategy.method_defined?(:authenticate!)
-          raise NoMethodError, "authenticate! is not declared in the #{label.inspect} strategy"
+        unless strategy.method_defined?(:authorize!)
+          raise NoMethodError, "authorize! is not declared in the #{label.inspect} strategy"
         end
 
         base = Watchman::Strategies::Base

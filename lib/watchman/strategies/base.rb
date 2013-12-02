@@ -118,7 +118,7 @@ module Watchman
       # :api: public
       def success!(permissions, message = nil)
         halt!
-        @permissions = permissions
+        @permissions = ::Watchman::Permissions::Set.new(permissions, env, scope)
         @message = message
         @result = :success
       end

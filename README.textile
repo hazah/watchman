@@ -81,7 +81,7 @@ for more fine tuned logic based on collections and resources. We pass a class as
 to define how to process collections of objects that the user has certain permissions for. By
 supplying a collection block, we give Watchman a chance to short circuit the authorization process
 and return a collection of preauthorized objects for the requested permission. This makes it simple
-to hook into something like @ActiveRecord@ and specify rules for processing scopes. Supplying a
+to hook into something like @ActiveRecord@ and specify rules for applying a scoping. Supplying a
 resource block will enable us to check authorization of individual objects and array-like
 collections for requested permissions.
 
