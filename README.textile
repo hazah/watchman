@@ -117,10 +117,14 @@ bc.. Warden::Manager.after_set_user do |user, auth, opts|
 end
 
 posts = env['watchman'].permitted(:read, Post.all) # Only retrieves posts where published is set to true
+env['watchman'].permit! :read, Post # Ensures that this permission is currently active, throws :watchman if fails.
 env['watchman'].permit! :read, posts # Checks all posts to ensure each returns true for published?, throws :watchman if fails.
+env['watchman'].permit! :read, posts.first # Ensure that post returns true for published?, throws :watchman if fails.
 
 env['watchman'].permitted? :read, Post # Returns true if this permission is currently active.
 env['watchman'].permitted? :read, posts # Checks all posts and returns true if each returns true for published?
+env['watchman'].permitted? :read, posts.first # Returns true if post returns true for published?.
+
 
 p. This setup means that whenever a user is authenticated using warden, they will automatically
 be authorized (their permissions will be known). Using the @permitted@ method you can retrieve
