@@ -74,15 +74,16 @@ end
 
 h3. Setup Permissions
 
-p. We can process the current user scope and determine if the user has permission for a requested action.
+p. Permissions are simple, easy to setup objects that implement a specific interface. The minimum
+We can
+define how to process collections of objects that the user has certain permissions for. By
+supplying a collection block, we give Watchman a chance to short circuit the authorization process
+and return a collection of preauthorized objects for the requested permission (This makes it simple
+to hook into something like @ActiveRecord@ and specify rules for processing scopes. Supplying a resource
+block will enable us to check authorization of individual objects and collections for requested
+permissions.
 
-p. We can define how to process collections of objects that the user has certain permissions for. By
-supplying a collection block, we give Watchman a chance to preprocess an object collection and return
-a collection authorized for the requested permission.
-
-p. Supplying a resource block will enable us to check authorization of individual objects and collections for requested permissions.
-
-bc.. Watchman::Permissions(:read_published_posts)
+bc.. Watchman::Permissions.add(:read_published_posts)
 
 Watchman::Permissions.add(:read, Post) do
   # This block is called for collections that are not arrays, such as @ActiveRecord::Relation@ objects.
