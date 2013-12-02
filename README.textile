@@ -75,13 +75,15 @@ end
 h3. Setup Permissions
 
 p. Permissions are simple, easy to setup objects that implement a specific interface. The minimum
-We can
-define how to process collections of objects that the user has certain permissions for. By
+we need to define is a permission name, which is usually implemented via a symbol. Permissions can
+also be coupled with a subject, such as @Post@ or @Comment@, for example. Subjects open the door
+for more fine tuned logic based on collections and resources. We pass a class as a second argument
+to define how to process collections of objects that the user has certain permissions for. By
 supplying a collection block, we give Watchman a chance to short circuit the authorization process
-and return a collection of preauthorized objects for the requested permission (This makes it simple
-to hook into something like @ActiveRecord@ and specify rules for processing scopes. Supplying a resource
-block will enable us to check authorization of individual objects and collections for requested
-permissions.
+and return a collection of preauthorized objects for the requested permission. This makes it simple
+to hook into something like @ActiveRecord@ and specify rules for processing scopes. Supplying a
+resource block will enable us to check authorization of individual objects and array-like
+collections for requested permissions.
 
 bc.. Watchman::Permissions.add(:read_published_posts)
 
