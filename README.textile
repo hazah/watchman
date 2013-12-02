@@ -126,8 +126,8 @@ env['watchman'].permitted? :read, posts # Checks all posts and returns true if e
 env['watchman'].permitted? :read, posts.first # Returns true if post returns true for published?.
 
 
-p. This setup means that whenever a user is authenticated using warden, they will automatically
-be authorized (their permissions will be known). Using the @permitted@ method you can retrieve
-a collection of objects for which the user has the permission. Using the @permit!@ method you
-can then test individual objects or entire collections whether the action is authorized or not.
-and fail authorization for specific sets of arguments.
+p. This setup means that whenever a user is authenticated using warden, they will automatically be
+authorized, that is their permissions will be known to watchman. Using the @permitted@ method you
+can retrieve a collection of objects for which the user has the permission. Using the @permit!@
+method you can then test individual objects or entire collections whether the action is authorized
+or not.
