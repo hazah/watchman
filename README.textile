@@ -1,6 +1,7 @@
 h2. Watchman
 
 Rack based authorization middleware.
+!https://travis-ci.org/hazah/watchman.png?branch=master!
 
 h2. Setup
 
