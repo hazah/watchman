@@ -7,16 +7,14 @@ module Watchman
 
       # :api: private
       def initialize(permissions, env, scope=nil) # :nodoc:
-        @permissions = begin
-          permissions.inject({}) do |perms, current|
-            label = current.name.to_sym
-            context = current.context? ? current.context.constantize : nil
-            klass = Permission[label]
+        @permissions = permissions.inject({}) do |perms, current|
+          label = current.name.to_sym
+          context = current.context? ? current.context.constantize : nil
+          klass = Permissions[label]
 
-            permission = klass.new(env, scope, context)
-            perms[label] = permission
-            perms
-          end
+          permission = klass.new(env, scope, context)
+          perms[label] = permission
+          perms
         end
       end
 
