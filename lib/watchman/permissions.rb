@@ -3,7 +3,7 @@ module Watchman
   module Permissions
     class << self
       # Add a permission and store it in a hash.
-      def add(label, permission = nil, &block)
+      def add(label, context = nil, permission = nil, &block)
         permission ||= Class.new(Watchman::Permissions::Base)
         permission.class_eval(&block) if block_given?
 
@@ -16,10 +16,10 @@ module Watchman
       end
 
       # Update a previously given permission.
-      def update(label, &block)
+      def update(label, context = nil, &block)
         permission = _permissions[label]
         raise "Unknown permission #{label.inspect}" unless permission
-        add(label, permission, &block)
+        add(label, context, permission, &block)
       end
 
       # Provides access to strategies by label
