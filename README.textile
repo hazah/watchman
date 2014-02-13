@@ -1,6 +1,7 @@
 h2. Watchman
 
 Rack based authorization middleware.
+!https://travis-ci.org/hazah/watchman.png?branch=master!
 
 h2. Setup
 
@@ -112,8 +113,9 @@ bc.. Warden::Manager.after_set_user do |user, auth, opts|
   env['watchman'].authorize! :warden, opts # use only the :warden strategy
 end
 
-posts = env['watchman'].permitted(:read, Post) # Only retrieves posts where published is set to true
 env['watchman'].ensure! :read, Post # Ensures that this permission is currently active, throws :watchman if fails.
+
+posts = env['watchman'].permitted(:read, Post) # Only retrieves posts where published is set to true
 env['watchman'].ensure! :read, posts # Checks all posts to ensure each returns true for published?, throws :watchman if fails.
 env['watchman'].ensure! :read, posts.first # Ensure that post returns true for published?, throws :watchman if fails.
 
