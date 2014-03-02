@@ -19,11 +19,11 @@ module Watchman
       key
     end
 
-    def store(permissions, scope)
-      return unless permissions
+    def store(set, scope)
+      return unless set
       method_name = "#{scope}_serialize"
       specialized = respond_to?(method_name)
-      session[key_for(scope)] = specialized ? send(method_name, permissions) : serialize(permissions)
+      session[key_for(scope)] = specialized ? send(method_name, set.permissions) : serialize(set.permissions)
     end
 
     def fetch(scope)
@@ -33,7 +33,7 @@ module Watchman
       method_name = "#{scope}_deserialize"
       permissions = respond_to?(method_name) ? send(method_name, key) : deserialize(key)
       delete(scope) unless permissions
-      permissions
+      ::Watchman::Permissions::Set.new(permissions, env, scope)
     end
 
     def stored?(scope)
