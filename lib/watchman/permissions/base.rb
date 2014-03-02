@@ -7,7 +7,7 @@ module Watchman
 
       include ::Watchman::Mixins::Common
       # :api: private
-      def initialize(env, scope = nil, context = nil) # :nodoc:
+      def initialize(env, scope=nil, context=nil) # :nodoc:
         @env, @scope, @context = env, scope, context
       end
     end
