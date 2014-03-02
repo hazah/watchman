@@ -1,17 +1,20 @@
 # encoding: utf-8
 module Watchman
   module Permissions
-    class Set < Hash
+    class Set
       # :api: public
-      attr_reader :permissions
+      attr_reader :env, :scope, :permissions
+
+      include ::Watchman::Mixins::Common
 
       # :api: private
       def initialize(permissions, env, scope=nil) # :nodoc:
+        @env, @scope = env, scope
         @permissions = begin
           permissions.inject({}) do |perms, current|
             label = current.name.to_sym
             context = current.context? ? current.context.constantize : nil
-            klass = Permission[label]
+            klass = Permissions[label]
 
             permission = klass.new(env, scope, context)
             perms[label] = permission
