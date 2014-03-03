@@ -20,7 +20,8 @@ module Watchman
       end
 
       def permitted(subject)
-        subject if permitted?(subject)
+        if permitted?(subject)
+
       end
 
       def permitted?(subject)
