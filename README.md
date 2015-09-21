@@ -18,13 +18,13 @@ Rack::Builder.new do
 
   use Warden::Manager do |warden|
     warden.default_strategies :password
-    warden.failure_a= BadAuthenticationEndsUpHere
+    warden.failure_app = BadAuthenticationEndsUpHere
   end
 
   use Watchman::Manager do |watchman|
     # use the 'warden' strategy to get access to the permission collection
     watchman.default_strategies :warden
-    watchman.failure_a= BadAuthorizationEndsUpHere
+    watchman.failure_app = BadAuthorizationEndsUpHere
   end
 
   run SomeApp
