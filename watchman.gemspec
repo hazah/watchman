@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.license = "MIT"
   s.extra_rdoc_files = [
     "LICENSE",
-     "README.textile"
+     "README.md"
   ]
   s.files = Dir["**/*"] - Dir["*.gem"] - ["Gemfile.lock"]
   s.homepage = %q{http://github.com/hazah/watchman}
