@@ -137,7 +137,7 @@ module Watchman
     # scope - the scope to check for authorization. Defaults to default_scope
     #
     # Example:
-    # env['warden'].authenticated?(:admin)
+    # env['watchman'].authorized?(:admin)
     #
     # :api: public
     def authorized?(scope = @config.default_scope)
@@ -153,6 +153,22 @@ module Watchman
       yield if block_given? && result
       result
     end
+
+    # :api: public
+    def ensure!(permission, subject=nil, scope = @config.default_scope)
+      _check_permissions(permission, :ensure!, subject, scope)
+    end
+
+    # :api: public
+    def permitted(permission, subject=nil, scope = @config.default_scope)
+      _check_permissions(permission, :permitted, subject, scope)
+    end
+
+    # :api: public
+    def permitted?(permission, subject=nil, scope = @config.default_scope)
+      _check_permissions(permission, :permitted?, subject, scope)
+    end
+
 
     # Manually set the permissions into the session and auth proxy
     #
@@ -319,6 +335,20 @@ module Watchman
       else
         raise "Invalid strategy #{name}"
       end
+    end
+
+    def _normalize_subject_and_scope(subject, scope) #:nodoc:
+      if @winning_strategies.has_key?(subject)
+        [nil, subject]
+      else
+        [subject, scope]
+      end
+    end
+
+    def _check_permissions(permission, check, subject, scope)
+      subject, scope = _normalize_subject_and_scope(subject, scope)
+
+      permissions(scope)[permission].send(check, subject)
     end
   end
 end

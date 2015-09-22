@@ -24,6 +24,13 @@ module Watchman
       def [](label)
         permissions[label]
       end
+
+      # :api: private
+      def permissions_for_session
+        permissions.map do |key, permission|
+          Struct.new(:name, :context).new(key, permission.context)
+        end
+      end
     end
   end
 end
