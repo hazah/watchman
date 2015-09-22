@@ -14,17 +14,17 @@ module Watchman
 
       # :api: private
       def ensure!(subject)
-        throw(:watchman, :scope => scope, :context => context) unless subject.nil? ?
+        throw(:watchman, :scope => scope, :context => context, :subject => subject) unless subject.nil? ?
                                                                         context.nil? :
                                                                         permitted?(subject)
       end
 
       def permitted(subject)
-        _collection?(subject) ? @collection_result : false
+        _collection?(subject) ? @collection_result : nil
       end
 
       def permitted?(subject)
-        if _collection?(subject)
+        subject.nil? || if _collection?(subject)
           @collection_result.send(_length_method) > 0
         elsif subject.respond_to?(_select_method)
           subject.send(_select_method, &resource)
