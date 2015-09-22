@@ -20,14 +20,21 @@ module Watchman
       end
 
       def permitted(subject)
-        _collection?(subject) ? @collection_result : nil
+        return nil if subject.nil?
+        if _collection?(subject)
+          @collection_result
+        elsif subject.respond_to?(_select_method)
+          subject.send(_select_method, &resource)
+        else
+          nil
+        end
       end
 
       def permitted?(subject)
         subject.nil? || if _collection?(subject)
           @collection_result.send(_length_method) > 0
         elsif subject.respond_to?(_select_method)
-          subject.send(_select_method, &resource)
+          subject.send(_select_method, &resource).length > 0
         else
           resource.call(subject)
         end
