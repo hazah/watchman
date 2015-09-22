@@ -20,8 +20,7 @@ module Watchman
       end
 
       def permitted(subject)
-        if permitted?(subject)
-
+        _collection?(subject) ? @collection_result : false
       end
 
       def permitted?(subject)
