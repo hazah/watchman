@@ -39,7 +39,9 @@ need to set this up
 
 ```ruby
 Watchman::Manager.serialize_into_session do |permissions|
-  Permission.pluck(:id).where(name: permissions.map(&:name))
+  permissions.map do |permission|
+    Permission.where(name: permission.name, context: permission.context).first_or_create!.id
+  end
 end
 
 Watchman::Manager.serialize_from_session do |ids|
