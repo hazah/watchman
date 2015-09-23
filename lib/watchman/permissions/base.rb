@@ -14,7 +14,7 @@ module Watchman
 
       # :api: private
       def ensure!(subject)
-        throw(:watchman, :scope => scope, :context => context, :subject => subject) unless subject.nil? ?
+        throw(:watchman, scope: scope, context: context, subject: subject) unless subject.nil? ?
                                                                         context.nil? :
                                                                         permitted?(subject)
       end
@@ -51,6 +51,11 @@ module Watchman
           define_method :resource do
             @resource ||= block
           end
+        end
+
+        attr_reader :context
+
+        def permitted? permission, subject=nil
         end
       end
 

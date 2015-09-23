@@ -5,6 +5,7 @@ module Watchman
       # Add a permission and store it in a hash.
       def add(label, context = nil, permission = nil, &block)
         permission ||= Class.new(Watchman::Permissions::Base)
+        permission.context = context
         permission.class_eval(&block) if block_given?
 
         base = Watchman::Permissions::Base
