@@ -53,7 +53,7 @@ module Watchman
           end
         end
 
-        attr_reader :context
+        attr_accessor :context
 
         def permitted? permission, subject=nil
         end
